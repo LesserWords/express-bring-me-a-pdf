@@ -230,17 +230,17 @@ async function generatePdf(req, res, next) {
       });
       const buffer = await page.pdf(options);
       try {
-        browser.close().then(() => {
-          res
-            .set({
-              "Content-Type": "application/pdf",
-              "Content-Length": buffer.length,
-              "Content-Disposition": "attachment; filename=" + fileName,
-            })
-            .send(buffer);
-        });
+        // browser.close().then(() => {
+        res
+          .set({
+            "Content-Type": "application/pdf",
+            "Content-Length": buffer.length,
+            "Content-Disposition": "attachment; filename=" + fileName,
+          })
+          .send(buffer);
+        // });
       } catch (error) {
-        res.json({ where: "When closing", error: error.message });
+        res.json({ where: "Sending file", error: error.message });
       }
     } catch (error) {
       res.json({ where: "Inside renderer", error: error.message });

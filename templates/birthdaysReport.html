@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <head>
+        <style type="text/css">
+            thead {
+                display: table-header-groups;
+            }
+            body{
+                width: 1200px;
+                margin: 0;
+                padding: 0px;
+                font-size: 16px;
+                line-height: 24px;
+                font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
+                color: rgb(33,33,33);
+                /* display: contents; */
+            }
+            .report-header{
+                display: flex;
+                flex-wrap: nowrap;
+                width: 100%;
+                height: 150px;
+                font-size: 32px;
+            }
+            .report-header-logo{
+                width: 150px;
+                height: 150px;
+            }
+            .report-header-description {
+                width: 80%;
+                height: 100%;
+                display: grid;
+                align-content: center;
+                padding-left: 40px;
+            }
+            .report-header-row {
+                width: 100%;
+                height: 100px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .report-header-text {
+                font-size: 48px;
+                text-align: center;
+            }
+            .report-body {
+                width: 90%;
+                border-collapse: collapse;
+            }
+            .report-footer {
+                position: fixed;
+                height: 50px;
+                width: 100%;
+                bottom: 0;
+            }
+            .report-footer-space {
+                height: 50px;
+            }
+            table {
+                border-collapse: collapse;
+                /* display: block; */
+                width: 100%;
+                margin-left: 4px;
+                margin-right: 4px;
+                /* width: calc(210mm - 16mm); */
+            }
+            table tr { 
+                page-break-inside: avoid! important;
+                margin: 4px 0 4px 0;
+            } 
+        </style>
+    <meta charset="utf-8">
+</head>
+<body>
+    <header class="report-header">
+        <!-- <img class="report-header-logo" src="../public/images/kerootica/simple.png"> -->
+        <img class="report-header-logo" src="https://lh3.googleusercontent.com/pw/AL9nZEUaNHSyuuFqg-H94KuxDQN96GQVsGKLrZR_Mh9zr7iU7VWH9MMWRHtW1AgyeR7TYEP54Gxnvs00N23Qx-8mZT4fR8zVWyGhyjq0uhR19HGPS8aG6KrWoO8sO-y_K4Fprh46IEyV4GwEnl3PNDIAjN2R=w523-h532-no">
+        <div class="report-header-description">
+            <div>Relatório de aniversariantes</div>
+            <!-- local destinado para o template do header da pagina a ser impressa -->
+        </div>
+    </header>
+    <main class="report-body">
+        <div class="report-header-row">
+            <div class="report-header-text">{{filterDescription}}</div>
+        </div>
+        <table >
+            <thead>
+                <tr>
+                    <th style="width: 60%; text-align: left;">Nome</th>
+                    <th style="width: 20%; text-align: left;">Aniversario</th>
+                    <th style="width: 20%; text-align: right;">Telefone</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each unPagedData.data}}
+                <tr >
+                    <td style="width: 60%; text-align: left;">{{name}}</td>
+                    <td style="width: 20%; text-align: left;">{{formatDate birth}}</td>
+                    <td style="width: 20%; text-align: right;">{{formatPhone phone}}</td>
+                </tr>
+                {{/each}}
+            </tbody>
+            <tfoot>
+                <tr><td>
+                    <div class="report-footer-space">
+                        &nbsp;
+                        <!-- regra aplicada no footer da tabela, para evitar quebras de conteudo e sobrescrição da tabela sobre o footer -->
+                    </div>
+                </td></tr>
+            </tfoot>
+        </table>
+    </main>
+    <footer>
+        <div class="report-footer">
+            <!-- espaço reservado pro footer da lib usada, configurada no app.js -->
+        </div>
+    </footer>
+</body>
+</html>

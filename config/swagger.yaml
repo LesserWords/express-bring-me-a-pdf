@@ -2,29 +2,72 @@ swagger: "2.0"
 basePath: "/"
 info:
   title: Pdf Generator
-  description: Api's to generate pdf
+  description: Api to generate PDFs, this is an internal tool, currently any configurations and options must be changed inside the project on a local repo. 
   version: '1.0'
 paths:
-  /generatepdf:
+  /generate-pdf:
     post:
       tags:
         - Pdf generator
-      description: convert html to pdf
+      description: Convert html template (supports Handlebars) and json to pdf
       produces:
         - application/pdf
       consumes:
         - multipart/form-data
       parameters:
-        - name: htmlTemplateFile
-          in: formData
-          type: file
-          required: true
-          description: Html template to be processed, handlebars suported
+        # - name: htmlTemplateFile
+        #   in: formData
+        #   type: file
+        #   required: true
+        #   description: Html template to be processed, supports Handlebars templates
         - name: jsonData
           in: formData
           type: file
           required: true
           description: Json data to be processed
+        - name: customHeader
+          in: formData
+          type: string
+          required: false
+          description: A string of HTML used for the header instead of the default
+        - name: customFooter
+          in: formData
+          type: string
+          required: false
+          description: A string of HTML used for the footer instead of the default
+      # requestBody:
+      #   content:
+      #     multipart/form-data:
+      #       schema:
+      #         type: object
+      #         properties:
+      #           puppeteerPDFGeneratorCustomOptions:
+      #             type: object
+      #             description: A custom object with the format of puppeteer.PDFOptions used for the pdf generation instead of the default, overrides the 'curtomHeader' and 'customFooter'
+      #           customHeader:
+      #             type: string
+      #             description: A string of HTML used for the header instead of the default
+      #           customFooter:
+      #             type: string
+      #             description: A string of HTML used for the footer instead of the default
+      responses:
+        200:
+          description: Successfully created
+  /generate-pdf-from-url:
+    post:
+      tags:
+        - Pdf generator
+      description: Convert html to pdf from an url
+      produces:
+        - application/pdf
+      consumes:
+        - multipart/form-data
+      parameters:
+        - name: url
+          in: formData
+          type: string
+          required: true
+          description: Url to the desired html to print
       responses:
         200:
           description: Successfully created

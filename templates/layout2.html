@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <head>
+        <style type="text/css">
+            thead {
+                display: table-header-groups;
+            }
+            body{
+                width: 1200px;
+                margin: 0;
+                padding: 0px;
+                font-size: 16px;
+                line-height: 24px;
+                font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
+                color: rgb(33,33,33);
+            }
+            .report-header{
+                display: flex;
+                flex-wrap: nowrap;
+                width: 100%;
+                height: 150px;
+                font-size: 32px;
+            }
+            .report-header-logo{
+                width: 20%;
+                height: 100%;
+                background: green;
+            }
+            .report-header-description {
+                width: 80%;
+                height: 100%;
+            }
+            .report-header-text {
+                font-size: 48px;
+                text-align: center;
+            }
+            .report-body {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            .report-footer {
+                position: fixed;
+                height: 50px;
+                width: 100%;
+                bottom: 0;
+            }
+            .report-footer-space {
+                height: 50px;
+            }
+            table {
+                border-collapse: collapse;
+                display: block;
+            }
+            table tr { 
+                page-break-inside: avoid! important;
+                margin: 4px 0 4px 0;
+            } 
+        </style>
+    <meta charset="utf-8">
+</head>
+<body>
+    <header class="report-header">
+        <img class="report-header-logo" src="https://picsum.photos/150/75">
+        <div class="report-header-description">
+            <div>template placeholder</div>
+        </div>
+    </header>
+    <main class="report-body">
+        <table style="width: 100%">
+            <thead>
+                <tr style="width: 100%">
+                    <th style="width: 60%; text-align: left;">Nome</th>
+                    <th style="width: 20%; text-align: left;">Aniversario</th>
+                    <th style="width: 20%; text-align: right;">Telefone</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each unPagedData.data}}
+                <tr >
+                    <td style="width: 60%; text-align: left;">{{name}}</td>
+                    <td style="width: 20%; text-align: left;">{{birth}}</td>
+                    <td style="width: 20%; text-align: right;">{{phone}}</td>
+                </tr>
+                {{/each}}
+            </tbody>
+            <tfoot>
+                <tr><td>
+                    <div class="report-footer-space">
+                        &nbsp;
+                    </div>
+                </td></tr>
+            </tfoot>
+        </table>
+    </main>
+    <footer>
+        <div class="report-footer">
+            
+        </div>
+    </footer>
+</body>
+</html>

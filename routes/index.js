@@ -108,10 +108,10 @@ async function generatePdfFromUrl(req, res) {
             .send(buffer);
         });
       } catch (error) {
-        res.status(422).send(error);
+        res.json({ error: err.message });
       }
     } catch (error) {
-      res.status(422).send(error);
+      res.json({ error: err.message });
     }
   }
 }
@@ -159,7 +159,7 @@ async function generatePdf(req, res) {
     const fileName = `${uuid()}.pdf`;
 
     // const jsonData = JSON.parse(req.files.jsonData.data);
-    const jsonData = req.body.jsonData;
+    const jsonData = req.body.jsonData || {};
     console.log("data");
     const options =
       // req.body.puppeteerPDFGeneratorCustomOptions? req.body.puppeteerPDFGeneratorCustomOptions:
@@ -215,10 +215,10 @@ async function generatePdf(req, res) {
           .send(buffer);
       });
     } catch (error) {
-      res.status(422).send(error);
+      res.json({ where: "Inside renderer", error: err.message });
     }
   } catch (error) {
-    res.status(422).send(error);
+    res.json({ where: "Outside on load file ", error: err.message });
   }
 }
 

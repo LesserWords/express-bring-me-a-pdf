@@ -95,7 +95,7 @@ async function startBrowser() {
     };
   }
 
-  const browser = await puppeteer.launch(options);
+  const browser = await chromium.puppeteer.launch(options);
   const page = await browser.newPage();
   return { browser, page };
 }
@@ -238,7 +238,7 @@ async function generatePdf(req, res, next) {
         };
       }
 
-      const browser = await puppeteer.launch(options);
+      const browser = await chromium.puppeteer.launch(options);
       const page = await browser.newPage();
       await page.setJavaScriptEnabled(false);
       await page.setContent(html, {

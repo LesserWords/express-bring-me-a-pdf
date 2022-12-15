@@ -157,8 +157,8 @@ async function generatePdf(req, res) {
     const file = await fs.readFileSync(filePath, "utf8");
     const fileName = `${uuid()}.pdf`;
 
-    const jsonData = JSON.parse(req.files.jsonData.data);
-    // const jsonData = req.body.jsonData;
+    // const jsonData = JSON.parse(req.files.jsonData.data);
+    const jsonData = req.body.jsonData;
     const options =
       // req.body.puppeteerPDFGeneratorCustomOptions? req.body.puppeteerPDFGeneratorCustomOptions:
       {

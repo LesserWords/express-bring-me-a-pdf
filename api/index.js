@@ -7,8 +7,6 @@ const swaggerDoc = require("../routes/swaggerDoc");
 const config = require("./config/config.js");
 const indexrouter = require("../routes/index");
 
-let http = require("http");
-
 const app = express();
 app.set("port", config.properties.appPort || 3000);
 
@@ -40,10 +38,9 @@ app.use((err, req, res, next) => {
 });
 
 swaggerDoc(app);
-let server = http.createServer(app);
-server.listen(app.get("port"), () => {
-  console.log("Express server listening on port " + app.get("port"));
-});
+app.listen(config.properties.appPort, () =>
+  console.log(`Server is running on port ${config.properties.appPort}`)
+);
 // app.listen(config.properties.appPort, () =>
 //   console.log(`Server is running on port ${config.properties.appPort}`)
 // );

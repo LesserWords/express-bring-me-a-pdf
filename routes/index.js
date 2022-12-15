@@ -237,9 +237,10 @@ async function generatePdf(req, res, next) {
           ignoreHTTPSErrors: true,
         };
       }
-      res.send("sadsiadsiadk");
+
       const browser = await puppeteer.launch(options);
       const page = await browser.newPage();
+      res.send("sadsiadsiadk");
       await page.setJavaScriptEnabled(false);
       await page.setContent(html, {
         waitUntil: ["domcontentloaded", "load", "networkidle0"],

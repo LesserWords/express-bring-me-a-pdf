@@ -65,7 +65,7 @@ const uuid = require("uuid-random");
 const customFunctions = require("../utils/functions.js");
 const app = require("express")();
 
-app.post("/generate-pdf", generatePdf(req, res, next));
+app.post("/generate-pdf", (req, res, next) => generatePdf(req, res, next));
 app.post("/generate-pdf-from-url", (req, res, next) => {
   generatePdfFromUrl(req, res);
 });

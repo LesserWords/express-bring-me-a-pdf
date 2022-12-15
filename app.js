@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.use(  
+app.use(
   fileUpload({
     createParentPath: true,
     limits: {
@@ -37,5 +37,7 @@ app.use((err, req, res, next) => {
 });
 
 swaggerDoc(app);
-app.listen(config.properties.appPort);
+app.listen(config.properties.appPort, () =>
+  console.log(`Server is running on port ${config.properties.appPort}`)
+);
 module.exports = app;

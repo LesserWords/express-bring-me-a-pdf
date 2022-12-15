@@ -6,7 +6,7 @@
     "start": "node ./bin/www"
   },
   "engines": {
-    "node": "^18"
+    "node": "^14"
   },
   "dependencies": {
     "@types/puppeteer": "^5.4.7",

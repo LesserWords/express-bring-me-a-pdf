@@ -6,12 +6,12 @@
     "start": "node ./bin/www"
   },
   "engines": {
-    "node": "^14"
+    "node": "^18"
   },
   "dependencies": {
     "@types/puppeteer": "^5.4.7",
     "body-parser": "^1.20.1",
-    "chrome-aws-lambda": "^6",
+    "chrome-aws-lambda": "^10.1.0",
     "content-disposition": "^0.5.4",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
@@ -26,7 +26,7 @@
     "kind-of": "^6.0.3",
     "morgan": "~1.9.1",
     "path": "^0.12.7",
-    "puppeteer-core": "6",
+    "puppeteer-core": "^19.4.0",
     "sanitize-html": "^2.7.2",
     "swagger-jsdoc": "^6.2.5",
     "swagger-ui-express": "^4.5.0",

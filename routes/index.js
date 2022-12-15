@@ -251,7 +251,6 @@ async function generatePdf(req, res, next) {
       res.json({
         where: "Inside renderer",
         error: error.message,
-        browser: browser,
       });
     }
   } catch (error) {

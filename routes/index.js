@@ -100,7 +100,7 @@ async function startBrowser() {
     const page = await browser.newPage();
     return { browser, page };
   } catch (error) {
-    console.log(error);
+    return { browser: undefined, page: undefined, error };
   }
 }
 async function generatePdfFromUrl(req, res) {
@@ -217,34 +217,42 @@ async function generatePdf(req, res, next) {
 
       const html = template(jsonData);
 
-      const { browser, page } = await startBrowser();
-
-      await page.setJavaScriptEnabled(false);
-      await page.setContent(html, {
-        waitUntil: ["domcontentloaded", "load", "networkidle0"],
-      });
-      // await page.addStyleTag({
-      //   content: `@page :first {margin-top: 20px; margin-bottom: 10px} `,
-      // });
-      await page.addStyleTag({
-        content: `@page { margin-bottom: 10px  }`,
-      });
-      const buffer = await page.pdf(options);
+      const { browser, page, error } = await startBrowser();
       try {
-        browser.close().then(() => {
-          res
-            .set({
-              "Content-Type": "application/pdf",
-              "Content-Length": buffer.length,
-              "Content-Disposition": "attachment; filename=" + fileName,
-            })
-            .send(buffer);
-        });
+        if (page) {
+          await page.setJavaScriptEnabled(false);
+          await page.setContent(html, {
+            waitUntil: ["domcontentloaded", "load", "networkidle0"],
+          });
+          // await page.addStyleTag({
+          //   content: `@page :first {margin-top: 20px; margin-bottom: 10px} `,
+          // });
+          await page.addStyleTag({
+            content: `@page { margin-bottom: 10px  }`,
+          });
+        }
+        const buffer = await page.pdf(options);
+        try {
+          browser.close().then(() => {
+            res
+              .set({
+                "Content-Type": "application/pdf",
+                "Content-Length": buffer.length,
+                "Content-Disposition": "attachment; filename=" + fileName,
+              })
+              .send(buffer);
+          });
+        } catch (error) {
+          res.json({
+            where: "Sending file",
+            error: error.message,
+          });
+        }
       } catch (error) {
         res.json({
           where: "Sending file",
           error: error.message,
-          browser: browser,
+          browseErr: error,
         });
       }
     } catch (error) {

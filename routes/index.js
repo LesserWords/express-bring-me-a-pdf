@@ -70,38 +70,34 @@ app.post("/generate-pdf-from-url", (req, res, next) => {
   generatePdfFromUrl(req, res);
 });
 async function startBrowser() {
-  try {
-    let options = {
+  let options = {
+    args: [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--allow-file-access-from-files",
+      "--enable-local-file-accesses",
+    ],
+    headless: true,
+  };
+  if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
+    options = {
       args: [
+        ...chrome.args,
         "--no-sandbox",
         "--disable-setuid-sandbox",
         "--allow-file-access-from-files",
         "--enable-local-file-accesses",
       ],
+      defaultViewport: chrome.defaultViewport,
+      executablePath: await chrome.executablePath,
       headless: true,
+      ignoreHTTPSErrors: true,
     };
-    if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
-      options = {
-        args: [
-          ...chrome.args,
-          "--no-sandbox",
-          "--disable-setuid-sandbox",
-          "--allow-file-access-from-files",
-          "--enable-local-file-accesses",
-        ],
-        defaultViewport: chrome.defaultViewport,
-        executablePath: await chrome.executablePath,
-        headless: true,
-        ignoreHTTPSErrors: true,
-      };
-    }
-
-    const browser = await puppeteer.launch(options);
-    const page = await browser.newPage();
-    return { browser, page };
-  } catch (error) {
-    return { browser: undefined, page: undefined, error };
   }
+
+  const browser = await puppeteer.launch(options);
+  const page = await browser.newPage();
+  return { browser, page };
 }
 async function generatePdfFromUrl(req, res) {
   if (req.body.url && req.body.url.length > 0) {
@@ -216,51 +212,59 @@ async function generatePdf(req, res, next) {
       const template = await handlebars.compile(file);
 
       const html = template(jsonData);
+      let options = {
+        args: [
+          "--no-sandbox",
+          "--disable-setuid-sandbox",
+          "--allow-file-access-from-files",
+          "--enable-local-file-accesses",
+        ],
+        headless: true,
+      };
+      if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
+        options = {
+          args: [
+            ...chrome.args,
+            "--no-sandbox",
+            "--disable-setuid-sandbox",
+            "--allow-file-access-from-files",
+            "--enable-local-file-accesses",
+          ],
+          defaultViewport: chrome.defaultViewport,
+          executablePath: await chrome.executablePath,
+          headless: true,
+          ignoreHTTPSErrors: true,
+        };
+      }
 
-      const { browser, page, error } = await startBrowser();
+      const browser = await puppeteer.launch(options);
+      const page = await browser.newPage();
+      await page.setJavaScriptEnabled(false);
+      await page.setContent(html, {
+        waitUntil: ["domcontentloaded", "load", "networkidle0"],
+      });
+      // await page.addStyleTag({
+      //   content: `@page :first {margin-top: 20px; margin-bottom: 10px} `,
+      // });
+      await page.addStyleTag({
+        content: `@page { margin-bottom: 10px  }`,
+      });
+      const buffer = await page.pdf(options);
       try {
-        let buffer;
-        if (page) {
-          await page.setJavaScriptEnabled(false);
-          await page.setContent(html, {
-            waitUntil: ["domcontentloaded", "load", "networkidle0"],
-          });
-          // await page.addStyleTag({
-          //   content: `@page :first {margin-top: 20px; margin-bottom: 10px} `,
-          // });
-          await page.addStyleTag({
-            content: `@page { margin-bottom: 10px  }`,
-          });
-          buffer = await page.pdf(options);
-        }
-        try {
-          // browser.close().then(() => {
+        browser.close().then(() => {
           res
             .set({
               "Content-Type": "application/pdf",
-              "Content-Length": buffer?.length || 1,
+              "Content-Length": buffer.length,
               "Content-Disposition": "attachment; filename=" + fileName,
             })
             .send(buffer);
-          // });
-        } catch (error) {
-          res.json({
-            where: "Sending file",
-            error: error.message,
-          });
-        }
-      } catch (error) {
-        res.json({
-          where: "Sending file",
-          error: error.message,
-          browseErr: error,
         });
+      } catch (error) {
+        res.json({ where: "Sending file", error: error.message });
       }
     } catch (error) {
-      res.json({
-        where: "Inside renderer",
-        error: error.message,
-      });
+      res.json({ where: "Inside renderer", error: error.message });
     }
   } catch (error) {
     res.json({ where: "Outside on load file ", error: error.message });

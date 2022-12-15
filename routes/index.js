@@ -100,7 +100,7 @@ async function startBrowser() {
     const page = await browser.newPage();
     return { browser, page };
   } catch (error) {
-    return { error, error };
+    console.log(error);
   }
 }
 async function generatePdfFromUrl(req, res) {
@@ -226,7 +226,7 @@ async function generatePdf(req, res, next) {
       // await page.addStyleTag({
       //   content: `@page :first {margin-top: 20px; margin-bottom: 10px} `,
       // });
-      const any = await page.addStyleTag({
+      await page.addStyleTag({
         content: `@page { margin-bottom: 10px  }`,
       });
       const buffer = await page.pdf(options);

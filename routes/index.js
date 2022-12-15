@@ -55,12 +55,12 @@ const fs = require("fs");
 require("handlebars-helpers")();
 const uuid = require("uuid-random");
 const customFunctions = require("../utils/functions.ts");
-const router = express.Router();
+const app = require("express")();
 
-router.post("/generate-pdf", (req, res, next) => {
+app.post("/generate-pdf", (req, res, next) => {
   generatePdf(req, res);
 });
-router.post("/generate-pdf-from-url", (req, res, next) => {
+app.post("/generate-pdf-from-url", (req, res, next) => {
   generatePdfFromUrl(req, res);
 });
 async function startBrowser() {
@@ -220,4 +220,4 @@ async function generatePdf(req, res) {
   }
 }
 
-module.exports = router;
+module.exports = app;

@@ -156,7 +156,7 @@ async function generatePdf(req, res) {
 
     const filePath = await require.resolve("../templates/birthdaysReport.html");
     const file = await fs.readFileSync(filePath, "utf8");
-    const fileName = `${uuid()}.pdf`;
+    const fileName = `${await uuid()}.pdf`;
 
     // const jsonData = JSON.parse(req.files.jsonData.data);
     const jsonData = req.body.jsonData || {};
@@ -189,7 +189,7 @@ async function generatePdf(req, res) {
     try {
       handlebars.registerHelper("formatDate", customFunctions.formatDate);
       handlebars.registerHelper("formatPhone", customFunctions.formatPhone);
-      const template = handlebars.compile(file);
+      const template = await handlebars.compile(file);
 
       const html = template(jsonData);
 

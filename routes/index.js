@@ -65,11 +65,11 @@ const uuid = require("uuid-random");
 const customFunctions = require("../utils/functions.js");
 const app = require("express")();
 
-app.post("/generate-pdf", async (req, res, next) => {
-  await generatePdf(req, res);
+app.post("/generate-pdf", (req, res, next) => {
+  generatePdf(req, res);
 });
-app.post("/generate-pdf-from-url", async (req, res, next) => {
-  await generatePdfFromUrl(req, res);
+app.post("/generate-pdf-from-url", (req, res, next) => {
+  generatePdfFromUrl(req, res);
 });
 async function startBrowser() {
   let options = {

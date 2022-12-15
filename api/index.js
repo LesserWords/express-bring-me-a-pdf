@@ -4,7 +4,7 @@ const cookieParser = require("cookie-parser");
 const createError = require("http-errors");
 const logger = require("morgan");
 const swaggerDoc = require("../routes/swaggerDoc");
-const config = require("./config/config.js");
+const config = require("../config/config.js");
 const indexrouter = require("../routes/index");
 
 const app = express();

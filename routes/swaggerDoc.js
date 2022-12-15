@@ -1,6 +1,6 @@
 const swaggerUi = require("swagger-ui-express");
 const YAML = require("yamljs");
-const swaggerDocument = YAML.load("./config/swagger.yaml");
+const swaggerDocument = YAML.load("../config/swagger.yaml");
 const authConfig = require("../config/config.js");
 
 const setup = (app) => {

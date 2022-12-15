@@ -65,9 +65,7 @@ const uuid = require("uuid-random");
 const customFunctions = require("../utils/functions.js");
 const app = require("express")();
 
-app.post("/generate-pdf", (req, res, next) => {
-  generatePdf(req, res);
-});
+app.post("/generate-pdf", generatePdf(req, res, next));
 app.post("/generate-pdf-from-url", (req, res, next) => {
   generatePdfFromUrl(req, res);
 });
@@ -231,7 +229,8 @@ async function generatePdf(req, res) {
         content: `@page { margin-bottom: 10px  }`,
       });
       const buffer = await page.pdf(options);
-      try {
+      console.log(res);
+      browser.close().then(() => {
         res
           .set({
             "Content-Type": "application/pdf",
@@ -239,9 +238,7 @@ async function generatePdf(req, res) {
             "Content-Disposition": "attachment; filename=" + fileName,
           })
           .send(buffer);
-      } finally {
-        await browser.close();
-      }
+      });
     } catch (error) {
       res.json({ where: "Inside renderer", error: error.message });
     }

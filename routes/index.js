@@ -49,10 +49,10 @@ const express = require("express");
 const handlebars = require("handlebars");
 const path = require("path");
 let puppeteer;
-let chromium;
+let chrome = {};
 
 if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
-  chromium = require("chrome-aws-lambda");
+  chrome = require("chrome-aws-lambda");
   puppeteer = require("puppeteer-core");
 } else {
   puppeteer = require("puppeteer");
@@ -82,20 +82,20 @@ async function startBrowser() {
   if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
     options = {
       args: [
-        ...chromium.args,
+        ...chrome.args,
         "--no-sandbox",
         "--disable-setuid-sandbox",
         "--allow-file-access-from-files",
         "--enable-local-file-accesses",
       ],
-      defaultViewport: chromium.defaultViewport,
-      executablePath: await chromium.executablePath,
+      defaultViewport: chrome.defaultViewport,
+      executablePath: await chrome.executablePath,
       headless: true,
       ignoreHTTPSErrors: true,
     };
   }
 
-  const browser = await chromium.puppeteer.launch(options);
+  const browser = await puppeteer.launch(options);
   const page = await browser.newPage();
   return { browser, page };
 }
@@ -181,7 +181,7 @@ async function generatePdf(req, res, next) {
 
     // const jsonData = JSON.parse(req.files.jsonData.data);
     const jsonData = req.body.jsonData || {};
-    const pdfOptions =
+    const options =
       // req.body.puppeteerPDFGeneratorCustomOptions? req.body.puppeteerPDFGeneratorCustomOptions:
       {
         format: "A4",
@@ -225,20 +225,20 @@ async function generatePdf(req, res, next) {
       if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
         options = {
           args: [
-            ...chromium.args,
+            ...chrome.args,
             "--no-sandbox",
             "--disable-setuid-sandbox",
             "--allow-file-access-from-files",
             "--enable-local-file-accesses",
           ],
-          defaultViewport: chromium.defaultViewport,
-          executablePath: await chromium.executablePath,
+          defaultViewport: chrome.defaultViewport,
+          executablePath: await chrome.executablePath,
           headless: true,
           ignoreHTTPSErrors: true,
         };
       }
 
-      const browser = await chromium.puppeteer.launch(options);
+      const browser = await puppeteer.launch(options);
       const page = await browser.newPage();
       await page.setJavaScriptEnabled(false);
       await page.setContent(html, {
@@ -250,7 +250,7 @@ async function generatePdf(req, res, next) {
       await page.addStyleTag({
         content: `@page { margin-bottom: 10px  }`,
       });
-      const buffer = await page.pdf(pdfOptions);
+      const buffer = await page.pdf(options);
       try {
         browser.close().then(() => {
           res

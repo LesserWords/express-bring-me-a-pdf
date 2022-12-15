@@ -206,7 +206,7 @@ async function generatePdf(req, res, next) {
               </div>
             </div>`,
       };
-    res.send("sadsiadsiadk");
+
     try {
       handlebars.registerHelper("formatDate", customFunctions.formatDate);
       handlebars.registerHelper("formatPhone", customFunctions.formatPhone);
@@ -237,7 +237,7 @@ async function generatePdf(req, res, next) {
           ignoreHTTPSErrors: true,
         };
       }
-
+      res.send("sadsiadsiadk");
       const browser = await puppeteer.launch(options);
       const page = await browser.newPage();
       await page.setJavaScriptEnabled(false);

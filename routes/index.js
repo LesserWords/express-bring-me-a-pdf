@@ -46,9 +46,17 @@
  *            description: Successfully created
  */
 const express = require("express");
-const puppeteer = require("puppeteer");
 const handlebars = require("handlebars");
 const path = require("path");
+let puppeteer;
+let chrome = {};
+
+if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
+  chrome = require("chrome-aws-lambda");
+  puppeteer = require("puppeteer-core");
+} else {
+  puppeteer = require("puppeteer");
+}
 
 const fs = require("fs");
 //required if you are using handle bar helper functions
@@ -57,14 +65,14 @@ const uuid = require("uuid-random");
 const customFunctions = require("../utils/functions.js");
 const app = require("express")();
 
-app.post("/generate-pdf", (req, res, next) => {
-  generatePdf(req, res);
+app.post("/generate-pdf", async (req, res, next) => {
+  await generatePdf(req, res);
 });
-app.post("/generate-pdf-from-url", (req, res, next) => {
-  generatePdfFromUrl(req, res);
+app.post("/generate-pdf-from-url", async (req, res, next) => {
+  await generatePdfFromUrl(req, res);
 });
 async function startBrowser() {
-  const browser = await puppeteer.launch({
+  let options = {
     args: [
       "--no-sandbox",
       "--disable-setuid-sandbox",
@@ -72,10 +80,30 @@ async function startBrowser() {
       "--enable-local-file-accesses",
     ],
     headless: true,
-    // headless: false,
-  });
-  const page = await browser.newPage();
-  return { browser, page };
+  };
+  if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
+    options = {
+      args: [
+        ...chrome.args,
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--allow-file-access-from-files",
+        "--enable-local-file-accesses",
+      ],
+      defaultViewport: chrome.defaultViewport,
+      executablePath: await chrome.executablePath,
+      headless: true,
+      ignoreHTTPSErrors: true,
+    };
+  }
+
+  try {
+    const browser = await puppeteer.launch(options);
+    const page = await browser.newPage();
+    return { browser, page };
+  } catch (error) {
+    res.json({ where: "When launching", error: error.message });
+  }
 }
 async function generatePdfFromUrl(req, res) {
   if (req.body.url && req.body.url.length > 0) {

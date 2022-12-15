@@ -229,16 +229,19 @@ async function generatePdf(req, res, next) {
         content: `@page { margin-bottom: 10px  }`,
       });
       const buffer = await page.pdf(options);
-      console.log(res);
-      browser.close().then(() => {
-        res
-          .set({
-            "Content-Type": "application/pdf",
-            "Content-Length": buffer.length,
-            "Content-Disposition": "attachment; filename=" + fileName,
-          })
-          .send(buffer);
-      });
+      try {
+        browser.close().then(() => {
+          res
+            .set({
+              "Content-Type": "application/pdf",
+              "Content-Length": buffer.length,
+              "Content-Disposition": "attachment; filename=" + fileName,
+            })
+            .send(buffer);
+        });
+      } catch (error) {
+        res.json({ where: "When closing", error: error.message });
+      }
     } catch (error) {
       res.json({ where: "Inside renderer", error: error.message });
     }

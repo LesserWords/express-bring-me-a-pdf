@@ -238,7 +238,7 @@ async function generatePdf(req, res, next) {
           res
             .set({
               "Content-Type": "application/pdf",
-              "Content-Length": buffer.length,
+              "Content-Length": buffer?.length || 1,
               "Content-Disposition": "attachment; filename=" + fileName,
             })
             .send(buffer);

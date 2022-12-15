@@ -219,6 +219,7 @@ async function generatePdf(req, res, next) {
 
       const { browser, page, error } = await startBrowser();
       try {
+        let buffer;
         if (page) {
           await page.setJavaScriptEnabled(false);
           await page.setContent(html, {
@@ -230,18 +231,18 @@ async function generatePdf(req, res, next) {
           await page.addStyleTag({
             content: `@page { margin-bottom: 10px  }`,
           });
+          buffer = await page.pdf(options);
         }
-        const buffer = await page.pdf(options);
         try {
-          browser.close().then(() => {
-            res
-              .set({
-                "Content-Type": "application/pdf",
-                "Content-Length": buffer.length,
-                "Content-Disposition": "attachment; filename=" + fileName,
-              })
-              .send(buffer);
-          });
+          // browser.close().then(() => {
+          res
+            .set({
+              "Content-Type": "application/pdf",
+              "Content-Length": buffer.length,
+              "Content-Disposition": "attachment; filename=" + fileName,
+            })
+            .send(buffer);
+          // });
         } catch (error) {
           res.json({
             where: "Sending file",

@@ -231,7 +231,7 @@ async function generatePdf(req, res) {
         content: `@page { margin-bottom: 10px  }`,
       });
       const buffer = await page.pdf(options);
-      await browser.close().then(() => {
+      try {
         res
           .set({
             "Content-Type": "application/pdf",
@@ -239,7 +239,9 @@ async function generatePdf(req, res) {
             "Content-Disposition": "attachment; filename=" + fileName,
           })
           .send(buffer);
-      });
+      } finally {
+        await browser.close();
+      }
     } catch (error) {
       res.json({ where: "Inside renderer", error: error.message });
     }

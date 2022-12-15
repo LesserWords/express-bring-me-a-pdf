@@ -206,6 +206,7 @@ async function generatePdf(req, res, next) {
               </div>
             </div>`,
       };
+    res.send("sadsiadsiadk");
     try {
       handlebars.registerHelper("formatDate", customFunctions.formatDate);
       handlebars.registerHelper("formatPhone", customFunctions.formatPhone);

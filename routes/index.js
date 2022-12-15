@@ -49,10 +49,10 @@ const express = require("express");
 const handlebars = require("handlebars");
 const path = require("path");
 let puppeteer;
-let chrome = {};
+let chromium;
 
 if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
-  chrome = require("chrome-aws-lambda");
+  chromium = require("chrome-aws-lambda");
   puppeteer = require("puppeteer-core");
 } else {
   puppeteer = require("puppeteer");
@@ -82,14 +82,14 @@ async function startBrowser() {
   if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
     options = {
       args: [
-        ...chrome.args,
+        ...chromium.args,
         "--no-sandbox",
         "--disable-setuid-sandbox",
         "--allow-file-access-from-files",
         "--enable-local-file-accesses",
       ],
-      defaultViewport: chrome.defaultViewport,
-      executablePath: await chrome.executablePath,
+      defaultViewport: chromium.defaultViewport,
+      executablePath: await chromium.executablePath,
       headless: true,
       ignoreHTTPSErrors: true,
     };
@@ -181,7 +181,7 @@ async function generatePdf(req, res, next) {
 
     // const jsonData = JSON.parse(req.files.jsonData.data);
     const jsonData = req.body.jsonData || {};
-    const options =
+    const pdfOptions =
       // req.body.puppeteerPDFGeneratorCustomOptions? req.body.puppeteerPDFGeneratorCustomOptions:
       {
         format: "A4",
@@ -225,14 +225,14 @@ async function generatePdf(req, res, next) {
       if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
         options = {
           args: [
-            ...chrome.args,
+            ...chromium.args,
             "--no-sandbox",
             "--disable-setuid-sandbox",
             "--allow-file-access-from-files",
             "--enable-local-file-accesses",
           ],
-          defaultViewport: chrome.defaultViewport,
-          executablePath: await chrome.executablePath,
+          defaultViewport: chromium.defaultViewport,
+          executablePath: await chromium.executablePath,
           headless: true,
           ignoreHTTPSErrors: true,
         };
@@ -250,7 +250,7 @@ async function generatePdf(req, res, next) {
       await page.addStyleTag({
         content: `@page { margin-bottom: 10px  }`,
       });
-      const buffer = await page.pdf(options);
+      const buffer = await page.pdf(pdfOptions);
       try {
         browser.close().then(() => {
           res

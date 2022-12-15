@@ -74,7 +74,6 @@ async function startBrowser() {
     headless: true,
     // headless: false,
   });
-  console.log("pupper");
   const page = await browser.newPage();
   return { browser, page };
 }
@@ -160,7 +159,6 @@ async function generatePdf(req, res) {
 
     // const jsonData = JSON.parse(req.files.jsonData.data);
     const jsonData = req.body.jsonData || {};
-    console.log("data");
     const options =
       // req.body.puppeteerPDFGeneratorCustomOptions? req.body.puppeteerPDFGeneratorCustomOptions:
       {
@@ -201,11 +199,11 @@ async function generatePdf(req, res) {
       // await page.addStyleTag({
       //   content: `@page :first {margin-top: 20px; margin-bottom: 10px} `,
       // });
-      await page.addStyleTag({
+      const any = await page.addStyleTag({
         content: `@page { margin-bottom: 10px  }`,
       });
       const buffer = await page.pdf(options);
-      browser.close().then(() => {
+      await browser.close().then(() => {
         res
           .set({
             "Content-Type": "application/pdf",

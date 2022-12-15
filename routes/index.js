@@ -107,10 +107,10 @@ async function generatePdfFromUrl(req, res) {
             .send(buffer);
         });
       } catch (error) {
-        res.json({ error: err.message });
+        res.json({ error: error.message });
       }
     } catch (error) {
-      res.json({ error: err.message });
+      res.json({ error: error.message });
     }
   }
 }
@@ -213,10 +213,10 @@ async function generatePdf(req, res) {
           .send(buffer);
       });
     } catch (error) {
-      res.json({ where: "Inside renderer", error: err.message });
+      res.json({ where: "Inside renderer", error: error.message });
     }
   } catch (error) {
-    res.json({ where: "Outside on load file ", error: err.message });
+    res.json({ where: "Outside on load file ", error: error.message });
   }
 }
 

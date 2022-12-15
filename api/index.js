@@ -44,7 +44,7 @@ let server = http.createServer(app);
 server.listen(app.get("port"), () => {
   console.log("Express server listening on port " + app.get("port"));
 });
-// server.listen(config.properties.appPort, () =>
+// app.listen(config.properties.appPort, () =>
 //   console.log(`Server is running on port ${config.properties.appPort}`)
 // );
 module.exports = app;

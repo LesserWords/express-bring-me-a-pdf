@@ -140,7 +140,7 @@ async function generatePdfFromUrl(req, res) {
     }
   }
 }
-async function generatePdf(req, res) {
+async function generatePdf(req, res, next) {
   try {
     // if (!req.files || !req.files.htmlTemplateFile) {
     //   res.status = 400;

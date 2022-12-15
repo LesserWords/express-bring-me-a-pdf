@@ -71,8 +71,8 @@ async function startBrowser() {
       "--allow-file-access-from-files",
       "--enable-local-file-accesses",
     ],
-    // headless: true,
-    headless: false,
+    headless: true,
+    // headless: false,
   });
   const page = await browser.newPage();
   return { browser, page };

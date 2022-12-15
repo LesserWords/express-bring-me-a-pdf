@@ -23,8 +23,9 @@ app.use(
     },
   })
 );
-
 app.use("/", indexrouter);
+app.get("/about", (req, res) => res.send("About Page Route"));
+
 // error handler
 app.use((err, req, res, next) => {
   res.locals.message = err.message;
@@ -39,11 +40,11 @@ app.use((err, req, res, next) => {
 });
 
 swaggerDoc(app);
-let server = http.createServer(app);
-server.listen(app.get("port"), () => {
-  console.log("Express server listening on port " + app.get("port"));
-});
-// server.listen(config.properties.appPort, () =>
-//   console.log(`Server is running on port ${config.properties.appPort}`)
-// );
+// let server = http.createServer(app);
+// server.listen(app.get("port"), () => {
+//   console.log("Express server listening on port " + app.get("port"));
+// });
+app.listen(config.properties.appPort, () =>
+  console.log(`Server is running on port ${config.properties.appPort}`)
+);
 module.exports = app;

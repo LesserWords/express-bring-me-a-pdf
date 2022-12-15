@@ -54,7 +54,7 @@ const fs = require("fs");
 //required if you are using handle bar helper functions
 require("handlebars-helpers")();
 const uuid = require("uuid-random");
-const customFunctions = require("../utils/functions.ts");
+const customFunctions = require("../utils/functions.js");
 const app = require("express")();
 
 app.post("/generate-pdf", (req, res, next) => {
@@ -74,6 +74,7 @@ async function startBrowser() {
     headless: true,
     // headless: false,
   });
+  console.log("pupper");
   const page = await browser.newPage();
   return { browser, page };
 }
@@ -159,6 +160,7 @@ async function generatePdf(req, res) {
 
     // const jsonData = JSON.parse(req.files.jsonData.data);
     const jsonData = req.body.jsonData;
+    console.log("data");
     const options =
       // req.body.puppeteerPDFGeneratorCustomOptions? req.body.puppeteerPDFGeneratorCustomOptions:
       {

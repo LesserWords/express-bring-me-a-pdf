@@ -45,7 +45,6 @@
  *          200:
  *            description: Successfully created
  */
-const express = require("express");
 const handlebars = require("handlebars");
 const path = require("path");
 let puppeteer;

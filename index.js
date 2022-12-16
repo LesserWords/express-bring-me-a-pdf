@@ -3,7 +3,7 @@ const fileUpload = require("express-fileupload");
 const cookieParser = require("cookie-parser");
 const createError = require("http-errors");
 const logger = require("morgan");
-// const swaggerDoc = require("./routes/swaggerDoc");
+const swaggerDoc = require("./routes/swaggerDoc");
 const config = require("./config/config.js");
 const indexrouter = require("./routes/index");
 
@@ -38,7 +38,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-// swaggerDoc(app);
+swaggerDoc(app);
 
 app.listen(config.properties.appPort, () =>
   console.log(`Server is running on port ${config.properties.appPort}`)

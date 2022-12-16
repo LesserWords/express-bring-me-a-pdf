@@ -74,8 +74,8 @@ async function startBrowser() {
     args: [
       "--no-sandbox",
       "--disable-setuid-sandbox",
-      // "--allow-file-access-from-files",
-      // "--enable-local-file-accesses",
+      "--allow-file-access-from-files",
+      "--enable-local-file-accesses",
     ],
     headless: true,
   };
@@ -85,8 +85,8 @@ async function startBrowser() {
         ...chrome.args,
         "--no-sandbox",
         "--disable-setuid-sandbox",
-        // "--allow-file-access-from-files",
-        // "--enable-local-file-accesses",
+        "--allow-file-access-from-files",
+        "--enable-local-file-accesses",
       ],
       defaultViewport: chrome.defaultViewport,
       executablePath: await chrome.executablePath,
@@ -180,15 +180,16 @@ async function generatePdf(req, res, next) {
     const fileName = `${await uuid()}.pdf`;
 
     // const jsonData = JSON.parse(req.files.jsonData.data);
-    const jsonData = req.body.jsonData || {};
-    const options =
+    const jsonData =
+      req.body.jsonData || JSON.parse(req.files?.jsonData?.data) || {};
+    const pdfOptions =
       // req.body.puppeteerPDFGeneratorCustomOptions? req.body.puppeteerPDFGeneratorCustomOptions:
       {
         format: "A4",
         width: "210mm",
         height: "297mm",
         margin: {
-          top: "15mm",
+          top: "7mm",
           bottom: "15mm",
           right: "8mm",
           left: "8mm",
@@ -250,7 +251,7 @@ async function generatePdf(req, res, next) {
       await page.addStyleTag({
         content: `@page { margin-bottom: 10px  }`,
       });
-      const buffer = await page.pdf(options);
+      const buffer = await page.pdf(pdfOptions);
       try {
         browser.close().then(() => {
           res

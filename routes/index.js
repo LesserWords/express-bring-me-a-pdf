@@ -74,8 +74,8 @@ async function startBrowser() {
     args: [
       "--no-sandbox",
       "--disable-setuid-sandbox",
-      "--allow-file-access-from-files",
-      "--enable-local-file-accesses",
+      // "--allow-file-access-from-files",
+      // "--enable-local-file-accesses",
     ],
     headless: true,
   };
@@ -85,8 +85,8 @@ async function startBrowser() {
         ...chrome.args,
         "--no-sandbox",
         "--disable-setuid-sandbox",
-        "--allow-file-access-from-files",
-        "--enable-local-file-accesses",
+        // "--allow-file-access-from-files",
+        // "--enable-local-file-accesses",
       ],
       defaultViewport: chrome.defaultViewport,
       executablePath: await chrome.executablePath,

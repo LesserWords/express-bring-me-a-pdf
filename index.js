@@ -10,7 +10,7 @@ const indexrouter = require("./routes/index");
 const app = express();
 app.set("port", config.properties.appPort || 3000);
 
-app.use(express.json());
+app.use(express.json({ limit: "20mb" }));
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
